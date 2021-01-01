@@ -2,6 +2,8 @@ package com.heraizen.ems.web;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.heraizen.ems.auth.IAuthenticationFacade;
 import com.heraizen.ems.dto.EmployeeDTO;
 import com.heraizen.ems.exception.DataNotFoundException;
 import com.heraizen.ems.service.EmployeeService;
@@ -20,7 +23,11 @@ import com.heraizen.ems.service.EmployeeService;
 @RestController
 @RequestMapping("/api/v1/emp/")
 public class EmployeeController {
-
+	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private IAuthenticationFacade authFacade;
+	
 	@Autowired
 	private EmployeeService employeeService;
 
@@ -31,6 +38,7 @@ public class EmployeeController {
 
 	@GetMapping(value = "all")
 	public List<EmployeeDTO> getEmployees(EmployeeDTO employeeDTO) {
+		log.info("The user :{} is request for all employees",authFacade.authentication().getName());
 		return employeeService.getAllEmployee();
 	}
 
